@@ -37,7 +37,7 @@ library Oracle {
         return
             Observation({
                 blockTimestamp: blockTimestamp,
-                tickCumulative: last.tickCumulative + int56(tick) * delta,
+                tickCumulative: last.tickCumulative + int56(int32(tick)) * delta,
                 secondsPerLiquidityCumulativeX128: last.secondsPerLiquidityCumulativeX128 +
                     ((uint160(delta) << 128) / (liquidity > 0 ? liquidity : 1)),
                 initialized: true
@@ -274,7 +274,7 @@ library Oracle {
             uint32 targetDelta = target - beforeOrAt.blockTimestamp;
             return (
                 beforeOrAt.tickCumulative +
-                    ((atOrAfter.tickCumulative - beforeOrAt.tickCumulative) / observationTimeDelta) *
+                ((int56(atOrAfter.tickCumulative) - int56(beforeOrAt.tickCumulative)) / int56(observationTimeDelta)) *
                     targetDelta,
                 beforeOrAt.secondsPerLiquidityCumulativeX128 +
                     uint160(

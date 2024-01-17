@@ -10,7 +10,6 @@ async function main() {
         console.log("below------");
         
         const uniswapv3factory = await UniswapV3Factory.deploy();
-        // await uniswapv3factory.deployed();
         await uniswapv3factory.deployed(); 
         
         console.log("Factory deployed to:", uniswapv3factory.address);
@@ -25,3 +24,6 @@ main()
         console.error(error);
         process.exit(1);
     });
+
+
+    // deployed Address = 0x60A4144bbdd5141164dE0CF5fBD883E1acD95287

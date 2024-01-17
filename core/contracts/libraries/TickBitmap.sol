@@ -13,7 +13,6 @@ library TickBitmap {
     /// @return bitPos The bit position in the word where the flag is stored
     function position(int24 tick) private pure returns (int16 wordPos, uint8 bitPos) {
         wordPos = int16(tick >> 8);
-        // bitPos = uint8(tick % 256);
         bitPos = uint8(uint24(tick % 256));
         
     }
@@ -60,8 +59,8 @@ library TickBitmap {
             initialized = masked != 0;
             // overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
             next = initialized
-                ? (compressed - int24(int8(bitPos - BitMath.mostSignificantBit(masked)))) * tickSpacing
-                : (compressed - int24(int8(bitPos))) * tickSpacing;
+                ? int24((compressed - int24(int8(bitPos - BitMath.mostSignificantBit(masked))))) * tickSpacing
+                : int24((compressed - int24(int8(bitPos)))) * tickSpacing;
         } else {
             // start from the word of the next tick, since the current tick state doesn't matter
             (int16 wordPos, uint8 bitPos) = position(compressed + 1);
@@ -73,8 +72,8 @@ library TickBitmap {
             initialized = masked != 0;
             // overflow/underflow is possible, but prevented externally by limiting both tickSpacing and tick
             next = initialized
-                ? (compressed + 1 + int24(int8(BitMath.leastSignificantBit(masked) - bitPos))) * tickSpacing
-                : (compressed + 1 + int24(int8(type(uint8).max - bitPos))) * tickSpacing;
+                ? int24((compressed + 1 + int24(int8(BitMath.leastSignificantBit(masked) - bitPos)))) * tickSpacing
+                : int24((compressed + 1 + int24(int8(type(uint8).max - bitPos)))) * tickSpacing;
         }
     }
 }
